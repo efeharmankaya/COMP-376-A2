@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Enemy Pathing https://www.youtube.com/watch?v=8eWbSN2T8TE
+
 public class TreeEnemyMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
