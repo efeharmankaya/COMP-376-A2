@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlimeScript : MonoBehaviour
 {
-    private float maxTime = 10f;
+    private float maxTime = 60f;
     public float timeRemaining;
 
     private int frameCount = 0;

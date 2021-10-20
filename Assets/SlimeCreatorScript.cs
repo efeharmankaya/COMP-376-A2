@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class SlimeCreatorScript : MonoBehaviour
 {
+    private float StartDeathTime = 60f;
     public Transform[] spawnPoints;
-    private float timeLimit = 10f;
-    // private GameObject[] slimes;
-    public GameObject slime;
-    // Start is called before the first frame update
-
+    public GameObject slime; // prefab for dynamic slime creation
+    public PlayerMovement player;
     public List<GameObject> slimes = new List<GameObject>();
-    public float timeRemaining = 10f;
+    public float timeRemaining;
     private int frameCount = 1;
 
     void Start()
@@ -20,14 +18,20 @@ public class SlimeCreatorScript : MonoBehaviour
     }
 
     public void spawnSlime(){
+        timeRemaining = StartDeathTime;
         GameObject x = Instantiate(slime, spawnPoints[Random.Range(0,spawnPoints.Length)]) as GameObject;
         x.transform.position = new Vector3(x.transform.position.x, x.transform.position.y, 0);
         slimes.Add(x);
+
+        // player.playerHealth = 1;
+        player.addIndicator(x);
     }
 
     public void RemoveSlime(GameObject s){
-        timeRemaining = 10f;
+        timeRemaining = StartDeathTime;
+        player.removeIndicator(s);
         slimes.Remove(s);
+        Destroy(s);
         spawnSlime();
     }
 
@@ -41,8 +45,10 @@ public class SlimeCreatorScript : MonoBehaviour
 
     void SlimeReset(){
         frameCount = 0;
-        timeRemaining = 10f;
+        timeRemaining = StartDeathTime;
+        GameObject temp = slimes[0];
         slimes.RemoveAt(0);
+        Destroy(temp);
         spawnSlime();
     }
 

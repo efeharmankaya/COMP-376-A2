@@ -6,15 +6,15 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 8f;
 
     public SlimeCreatorScript slimeSpawner;
+    public GameObject indicatorPrefab;
     public Rigidbody2D rb;
     public Animator animator;
     Vector2 movement;
 
     public GameObject gameOverText, restartButton;
-
     /*
         Controlling lives
     */
@@ -24,6 +24,9 @@ public class PlayerMovement : MonoBehaviour
     bool coroutineAllowed = true;
     Color color;
     Renderer renderer;
+
+    public List<TargetIndicator> indicators = new List<TargetIndicator>();
+
     void Start()
     {
         gameOverText.SetActive(false);
@@ -57,8 +60,38 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
-        
+
+        // if(indicators.Count != slimeSpawner.slimes.Count){
+        //     indicators.Clear();
+        //     foreach(GameObject s in slimeSpawner.slimes){
+                // GameObject i = Instantiate(indicatorPrefab) as GameObject;
+                // TargetIndicator t = i.GetComponent<TargetIndicator>();
+                // t.setTarget(s);
+                // // i.setTarget(s);
+                // indicators.Add(i);
+        //     }
+        // }
+           
     }
+
+    public void addIndicator(GameObject s){
+        GameObject i = Instantiate(indicatorPrefab, transform) as GameObject;
+        TargetIndicator t = i.GetComponent<TargetIndicator>();
+        t.setTarget(s);
+        // i.transform.position = new Vector3(0,0,0);
+        i.transform.parent = transform;
+        indicators.Add(t);
+    }
+
+    public void removeIndicator(GameObject s){
+        foreach(TargetIndicator i in indicators){
+            if(i.Target == s){
+                indicators.Remove(i);
+                break;
+            }
+        }
+    }
+
 
     // Called 50 times per second
     void FixedUpdate()
