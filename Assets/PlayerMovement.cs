@@ -60,17 +60,6 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
-
-        // if(indicators.Count != slimeSpawner.slimes.Count){
-        //     indicators.Clear();
-        //     foreach(GameObject s in slimeSpawner.slimes){
-                // GameObject i = Instantiate(indicatorPrefab) as GameObject;
-                // TargetIndicator t = i.GetComponent<TargetIndicator>();
-                // t.setTarget(s);
-                // // i.setTarget(s);
-                // indicators.Add(i);
-        //     }
-        // }
            
     }
 
