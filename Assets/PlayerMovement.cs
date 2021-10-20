@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
 
+    public SlimeCreatorScript slimeSpawner;
     public Rigidbody2D rb;
     public Animator animator;
     Vector2 movement;
@@ -92,6 +93,14 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.SetActive(false);
             }
             
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D col){ // Slime cleaning
+        if(col.gameObject.tag.Equals("Slime")){
+            // if(Input.GetKeyDown(KeyCode.Space))
+            slimeSpawner.RemoveSlime(col.gameObject);
+            Destroy(col.gameObject);
         }
     }
 

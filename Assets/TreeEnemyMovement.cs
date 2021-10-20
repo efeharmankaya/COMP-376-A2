@@ -31,6 +31,7 @@ public class TreeEnemyMovement : MonoBehaviour
     {
         // Movement
         transform.position = Vector2.MoveTowards(transform.position, moveSpots[index].position, moveSpeed * Time.deltaTime);
+        transform.rotation = new Quaternion(0,0,0,0);
         if(Vector2.Distance(transform.position, moveSpots[index].position) < 0.5f){
             if(waitTime <= 0){
                 // Find new spot to move to
@@ -47,10 +48,4 @@ public class TreeEnemyMovement : MonoBehaviour
             animator.SetFloat("Speed", 1);
         }
     }
-
-    // void OnCollisionEnter2D(Collision2D col){
-    //     if(col.gameObject.tag.Equals("Wall")){
-    //         randomSpot = Random.Range(0, moveSpots.Length);
-    //     }
-    // }
 }
