@@ -14,10 +14,36 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject gameOverText, restartButton;
 
+    /*
+        Controlling lives
+    */
+    public GameObject heart1, heart2, heart3;
+    public int playerHealth = 3;
+    int playerLayer, enemyLayer; // temporary collision removal
+    bool coroutineAllowed = true;
+    Color color;
+    Renderer renderer;
     void Start()
     {
         gameOverText.SetActive(false);
         restartButton.SetActive(false);
+
+        playerLayer = this.gameObject.layer;
+        enemyLayer = LayerMask.NameToLayer("Enemy");
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
+        
+        heart1 = GameObject.Find("heart1");
+        heart2 = GameObject.Find("heart2");
+        heart3 = GameObject.Find("heart3");
+        
+        heart1.gameObject.SetActive(true);
+        heart2.gameObject.SetActive(true);
+        heart3.gameObject.SetActive(true);
+
+        renderer = GetComponent<Renderer>();
+        color = renderer.material.color;
+
+        
     }
 
     // Update is called once per frame
@@ -42,9 +68,43 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col){
         if(col.gameObject.tag.Equals("Enemy")){
-            gameOverText.SetActive(true);
-            restartButton.SetActive(true);
-            gameObject.SetActive(false);
+            col.gameObject.transform.Rotate(0,0,0);
+
+            playerHealth -= 1;
+            switch(playerHealth){
+                case 2:
+                    heart3.gameObject.SetActive(false);
+                    if(coroutineAllowed){ StartCoroutine("Immortal"); }
+                    break;
+                case 1:
+                    heart2.gameObject.SetActive(false);
+                    if(coroutineAllowed){ StartCoroutine("Immortal"); }
+                    break;
+                case 0:
+                    heart1.gameObject.SetActive(false);
+                    if(coroutineAllowed){ StartCoroutine("Immortal"); }
+                    break;
+            }
+            
+            if(playerHealth < 1){
+                gameOverText.SetActive(true);
+                restartButton.SetActive(true);
+                gameObject.SetActive(false);
+            }
+            
         }
+    }
+
+    IEnumerator Immortal()
+    {
+        coroutineAllowed = false; // mutex lock
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
+        color.a = 0.5f;
+        renderer.material.color = color;
+        yield return new WaitForSeconds(3f);
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
+        color.a = 1f;
+        renderer.material.color = color;
+        coroutineAllowed = true; // mutex unlock
     }
 }

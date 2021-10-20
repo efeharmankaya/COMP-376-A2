@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Camera Follow + minor collisions https://generalistprogrammer.com/unity/unity-2d-how-to-make-camera-follow-player/
+// Map background https://rpgmaker.net/forums/topics/8095/?p=368
 public class CameraFollow : MonoBehaviour
 {
     public Transform FollowTransform;
