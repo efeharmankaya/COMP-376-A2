@@ -93,28 +93,32 @@ public class PlayerMovement : MonoBehaviour
         if(col.gameObject.tag.Equals("Enemy")){
             col.gameObject.transform.Rotate(0,0,0);
 
-            playerHealth -= 1;
-            switch(playerHealth){
-                case 2:
-                    heart3.gameObject.SetActive(false);
-                    if(coroutineAllowed){ StartCoroutine("Immortal"); }
-                    break;
-                case 1:
-                    heart2.gameObject.SetActive(false);
-                    if(coroutineAllowed){ StartCoroutine("Immortal"); }
-                    break;
-                case 0:
-                    heart1.gameObject.SetActive(false);
-                    if(coroutineAllowed){ StartCoroutine("Immortal"); }
-                    break;
-            }
+            getHurt();
             
-            if(playerHealth < 1){
-                gameOverText.SetActive(true);
-                restartButton.SetActive(true);
-                gameObject.SetActive(false);
-            }
-            
+        }
+    }
+
+    public void getHurt(){
+        playerHealth -= 1;
+        switch(playerHealth){
+            case 2:
+                heart3.gameObject.SetActive(false);
+                if(coroutineAllowed){ StartCoroutine("Immortal"); }
+                break;
+            case 1:
+                heart2.gameObject.SetActive(false);
+                if(coroutineAllowed){ StartCoroutine("Immortal"); }
+                break;
+            case 0:
+                heart1.gameObject.SetActive(false);
+                if(coroutineAllowed){ StartCoroutine("Immortal"); }
+                break;
+        }
+        
+        if(playerHealth < 1){
+            gameOverText.SetActive(true);
+            restartButton.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 
