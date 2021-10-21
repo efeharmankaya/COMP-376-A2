@@ -87,6 +87,11 @@ public class PlayerMovement : MonoBehaviour
     {
         // Movement
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+
+        if(MainScoreScript.score <= -20){
+            playerHealth = 0;
+            getHurt();
+        }
     }
 
     void OnCollisionEnter2D(Collision2D col){
@@ -119,12 +124,16 @@ public class PlayerMovement : MonoBehaviour
             gameOverText.SetActive(true);
             restartButton.SetActive(true);
             gameObject.SetActive(false);
+        }else{
+            MainScoreScript.score -= 10;
         }
     }
 
     void OnTriggerStay2D(Collider2D col){ // Slime cleaning
         if(col.gameObject.tag.Equals("Slime")){
             // if(Input.GetKeyDown(KeyCode.Space))
+            MainScoreScript.score += 2;
+            LevelTextScript.slimeKills++;
             slimeSpawner.RemoveSlime(col.gameObject);
             Destroy(col.gameObject);
         }

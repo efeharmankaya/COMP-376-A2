@@ -19,6 +19,9 @@ public class RestartButtonScript : MonoBehaviour
 
     public void RestartScene()
     {
+        MainScoreScript.score = 0;
+        LevelTextScript.level = 1;
+        LevelTextScript.slimeKills = 0;
         SceneManager.LoadScene("SampleScene");
     }
 }

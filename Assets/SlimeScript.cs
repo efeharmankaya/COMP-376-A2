@@ -20,6 +20,7 @@ public class SlimeScript : MonoBehaviour
     {
         if(timeRemaining <= 0){
             // Lose points
+            MainScoreScript.score -= 1;
             SlimeCreatorScript sc = transform.parent.gameObject.GetComponent<SlimeCreatorScript>();
             Destroy(this.gameObject);
             sc.spawnSlime();
