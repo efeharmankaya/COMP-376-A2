@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+External images/sprites used:
+    https://thumbs.dreamstime.com/z/pixel-no-smoking-sign-27815252.jpg
+    https://thumbs.dreamstime.com/b/vector-pixel-art-protective-mask-isolated-cartoon-148826982.jpg
+    https://thumbs.dreamstime.com/z/syringe-blue-medicine-pixel-art-style-gray-74173847.jpg
+    https://cdn5.vectorstock.com/i/thumb-large/99/44/pixel-art-8-bit-hazard-orange-sign-radiation-vector-27629944.jpg
+    https://images.cdn4.stockunlimited.net/clipart/pixel-art-skull_1959058.jpg
+*/
+
 public class EnemyScript : MonoBehaviour
 {
     public Rigidbody2D rb;
@@ -12,7 +21,9 @@ public class EnemyScript : MonoBehaviour
     public bool hasVax;
     public bool isOld;
 
-
+    private GameObject mask, vax, radiation, skull;
+    private SpriteRenderer maskRenderer, vaxRenderer;
+    public Sprite maskSprite, nomaskSprite, vaxSprite, novaxSprite;
 
     bool coroutineAllowed = true;
     Vector2 movement;
@@ -20,18 +31,40 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        mask = transform.Find("mask").gameObject;
+        vax = transform.Find("vax").gameObject;
+        radiation = transform.Find("radiation").gameObject ;
+        skull = transform.Find("skull").gameObject;
+
+        maskRenderer = mask.GetComponent<SpriteRenderer>();
+        vaxRenderer = vax.GetComponent<SpriteRenderer>();
+
         changeDirection();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateSprites();
+    }
+
+    void UpdateSprites(){
+        maskRenderer.sprite = this.hasMask ? maskSprite : nomaskSprite;
+        vaxRenderer.sprite = hasVax ? vaxSprite : novaxSprite;
+        // if(hasVax){
+        //     vaxRenderer.sprite = vaxSprite;
+        // }else{
+            // vaxRenderer.sprite = novaxSprite;
+        // }
+
+        radiation.gameObject.SetActive(hasCovid);
+        skull.gameObject.SetActive(isOld);
     }
 
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        
     }
 
     public void changeDirection(){
