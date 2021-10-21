@@ -7,6 +7,10 @@ TagManager:
   - Enemy
   - Wall
   - Slime
+  - Vax
+  - Unvax
+  - Old
+  - Infected
   layers:
   - Default
   - TransparentFX

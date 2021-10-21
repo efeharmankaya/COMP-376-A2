@@ -20,7 +20,8 @@ public class SlimeScript : MonoBehaviour
     {
         if(timeRemaining <= 0){
             // Lose points
-            MainScoreScript.score -= 1;
+            MainScoreScript.score -= 1; // Lose points on slime time out death
+            SlimeCreatorScript.slimeSpreadSpeed++; // Increase spread speed on time out death
             SlimeCreatorScript sc = transform.parent.gameObject.GetComponent<SlimeCreatorScript>();
             Destroy(this.gameObject);
             sc.spawnSlime();
@@ -36,5 +37,9 @@ public class SlimeScript : MonoBehaviour
             frameCount++;
         else
             frameCount = 0;
+    }
+
+    public void setDeathTime(int deathTime){
+        maxTime = deathTime;
     }
 }

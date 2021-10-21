@@ -19,9 +19,12 @@ public class RestartButtonScript : MonoBehaviour
 
     public void RestartScene()
     {
+        // Reset all static variables
         MainScoreScript.score = 0;
         LevelTextScript.level = 1;
         LevelTextScript.slimeKills = 0;
+        // SlimeCreatorScript.StartDeathTime = 60f;
+        SlimeCreatorScript.slimeSpreadSpeed = 2;
         SceneManager.LoadScene("SampleScene");
     }
 }
