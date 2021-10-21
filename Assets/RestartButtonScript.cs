@@ -23,8 +23,8 @@ public class RestartButtonScript : MonoBehaviour
         MainScoreScript.score = 0;
         LevelTextScript.level = 1;
         LevelTextScript.slimeKills = 0;
-        // SlimeCreatorScript.StartDeathTime = 60f;
         SlimeCreatorScript.slimeSpreadSpeed = 2;
+        EnemyScript.maxCooldown = 5f;
         SceneManager.LoadScene("SampleScene");
     }
 }

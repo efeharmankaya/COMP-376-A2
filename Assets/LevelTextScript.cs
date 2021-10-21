@@ -24,6 +24,8 @@ public class LevelTextScript : MonoBehaviour
             slimeKills = 0;
             level++;
             GameObject.Find("Player").gameObject.GetComponent<PlayerMovement>().Heal();
+            EnemyCreator em = GameObject.Find("EnemyCreator").gameObject.GetComponent<EnemyCreator>();
+            em.startLevelSpawning(); // Destroy all current enemies and start new spawning
         }
     }
 }

@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 8799399557089136094}
   - component: {fileID: 9174492122496541619}
   - component: {fileID: 2924092829212011853}
+  - component: {fileID: -3403437763779882484}
   m_Layer: 0
   m_Name: BaseEnemyFinal
   m_TagString: Untagged
@@ -220,10 +221,12 @@ MonoBehaviour:
   hasMask: 0
   hasVax: 0
   isOld: 0
+  cooldown: 3
   maskSprite: {fileID: 21300000, guid: 9f798d9b8aa3cdf479223bdce9d64504, type: 3}
   nomaskSprite: {fileID: 21300000, guid: 8f7186a0e376e0b438c4baf1f8e91ca7, type: 3}
   vaxSprite: {fileID: 21300000, guid: 8cca5a78d5d3ac64f911cad58120fcc7, type: 3}
   novaxSprite: {fileID: 21300000, guid: 47ca742f38cff0648a2fea1a9d43b990, type: 3}
+  circleCollider2D: {fileID: 0}
 --- !u!212 &8799399557089136094
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -322,6 +325,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1.5}
   m_EdgeRadius: 0
+--- !u!58 &-3403437763779882484
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6117697174414839000}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.5
 --- !u!1 &6203628084716322673
 GameObject:
   m_ObjectHideFlags: 0

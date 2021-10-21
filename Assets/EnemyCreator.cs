@@ -28,11 +28,11 @@ public class EnemyCreator : MonoBehaviour
 
     // Spawning params
     public int[] spawnNumbers = {
-        3, // Vax
-        3, // Unvax mask
+        2, // Vax
+        1, // Unvax mask
         2, // Unvax no mask
-        3, // Old (high risk)
-        1, // Infected
+        1, // Old (high risk)
+        0, // Infected
     };
 
     public List<GameObject> enemies = new List<GameObject>();
@@ -45,6 +45,10 @@ public class EnemyCreator : MonoBehaviour
 
     // TODO???: make static to be called from other script????
     public void startLevelSpawning(){
+        Debug.Log("NEW LEVEL SPAWNING #" + LevelTextScript.level);
+        foreach(GameObject e in enemies){ Destroy(e); }
+        enemies.Clear();
+
         for(int i = 0; i < spawnNumbers.Length; i++){
             int n = spawnNumbers[i]; // amount of current index enemy to spawn
             switch(i){
@@ -60,23 +64,26 @@ public class EnemyCreator : MonoBehaviour
                 case 3: // old enemy
                     createEnemy(n, "Old", false, true, true, false);
                     break;
-                // case 4: // infected enemy
-                //     createEnemy(n, false,);
-                //     break;
+                case 4: // infected enemy
+                    createEnemy(n, "Infected", false, false, false, true);
+                    break;
             }
         }
     }
 
     private void createEnemy(int n, string tag, bool vax, bool mask, bool old, bool covid){
-        GameObject enemy = Instantiate(EnemyBase, spawns[Random.Range(0, spawns.Length)]);
-        EnemyScript es = enemy.GetComponent<EnemyScript>();
-        enemy.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, 0);
-        es.hasVax = vax;
-        es.hasMask = mask;
-        es.isOld = old;
-        es.hasCovid = covid;
-        enemy.tag = covid ? "Infected" : tag;
-        enemies.Add(enemy);
+        for(int i = 0; i < n; i++){
+            GameObject enemy = Instantiate(EnemyBase, spawns[Random.Range(0, spawns.Length)]);
+            EnemyScript es = enemy.GetComponent<EnemyScript>();
+            enemy.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, 0);
+            es.hasVax = vax;
+            es.hasMask = mask;
+            es.isOld = old;
+            es.hasCovid = covid;
+            enemy.tag = covid ? "Infected" : tag; // Double check correct tag for infected
+            enemies.Add(enemy);
+        }
+        
     }
 
     // Update is called once per frame

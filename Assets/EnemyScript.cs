@@ -21,6 +21,10 @@ public class EnemyScript : MonoBehaviour
     public bool hasVax;
     public bool isOld;
 
+    public static float maxCooldown = 5f;
+    public float cooldown;
+    private bool startCoolDown = false;
+    private int framecount = 0;
     private GameObject mask, vax, radiation, skull;
     private SpriteRenderer maskRenderer, vaxRenderer;
     public Sprite maskSprite, nomaskSprite, vaxSprite, novaxSprite;
@@ -31,6 +35,8 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        cooldown = maxCooldown;
+
         mask = transform.Find("mask").gameObject;
         vax = transform.Find("vax").gameObject;
         radiation = transform.Find("radiation").gameObject ;
@@ -40,7 +46,7 @@ public class EnemyScript : MonoBehaviour
         vaxRenderer = vax.GetComponent<SpriteRenderer>();
 
         moveSpeed = hasCovid || isOld ? (moveSpeed/2) : (moveSpeed);
-
+        moveSpeed += LevelTextScript.level/2;
         changeDirection();
     }
 
@@ -72,6 +78,20 @@ public class EnemyScript : MonoBehaviour
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        if(cooldown <= 0f){
+            cooldown = maxCooldown;
+            startCoolDown = false;
+        }
+        if(startCoolDown){
+            if(framecount == 1)
+                cooldown--;
+        
+            if(framecount <= 50)
+                framecount++;
+            else
+                framecount = 0;
+        }
+        
         
     }
 
@@ -89,52 +109,81 @@ public class EnemyScript : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col){ // pathing + infecting other enemies
         if(!col.gameObject.tag.Equals("Player")){
-            changeDirection();
             checkVirus(col);
+            changeDirection();
         }
     }
     void OnCollisionStay2D(Collision2D col){ // pathing + infecting other enemies
         if(!col.gameObject.tag.Equals("Player")){
+            // checkVirus(col);
             changeDirection();
-            checkVirus(col);
         }
     }
 
 
     void OnTriggerEnter2D(Collider2D other) {
-        if(other.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, other.transform.position) <= 3f)
+        if(other.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, other.transform.position) <= 3f && hasCovid)
             checkPlayerVirus(other);
         else if(other.gameObject.tag.Equals("Slime"))
             checkSlimeVirus(other);
     }
 
+    float getOdds(){
+        startCoolDown = true;
+        float odds = 0.05f;
+        if(!hasVax)
+            odds += 0.1f;
+        if(!hasMask)
+            odds += 0.1f;
+        if(isOld)
+            odds += 0.4f;
+
+        return odds;
+    }
+    
+    bool caughtCovid(float odds){
+        return Random.Range(0f,1f) <= odds;
+    }
+
     void checkPlayerVirus(Collider2D col){
         if(hasCovid){
             PlayerMovement playerMovement = col.gameObject.GetComponent<PlayerMovement>();
-            playerMovement.getHurt();
+            if(!playerMovement.coroutineAllowed)
+                return; // skip if player is already immortal
+            float odds = Random.Range(0f,1f);
+            Debug.Log("PLAYER IN RANGE OF COVID odds: " + odds);
+            if(odds <= 0.2f){
+                playerMovement.getHurt();
+            }else{ // random covid chance to player didn't spread
+                playerMovement.StartCoroutine("Immortal");
+            }
         }
+
     }
     void checkSlimeVirus(Collider2D col){
         if(hasCovid)
             return;
         
-        float odds = 0.05f;
+        float odds = getOdds();
 
-        if(!hasVax)
-            odds += 0.1f;
-        if(!hasMask)
-            odds += 0.2f;
-        Debug.Log("in checkSlimeVirus odds: " + odds);
-        if(Random.Range(0f,1f) <= odds){
+        // Debug.Log("in checkSlimeVirus odds: " + odds);
+        if(caughtCovid(odds)){
             hasCovid = true;
-            Debug.Log("CAUGHT COVID FROM SLIME");
+            Debug.Log("ENEMY CAUGHT COVID FROM SLIME odds: " + odds);
         }
     }
+
     void checkVirus(Collision2D col){
-        if(hasVax && hasMask) // mask + vax = fully protected
+        if(hasCovid || col.gameObject.tag != "Infected") // skip logic if this has covid or collision isn't infected
             return;
         
-        // if(col.gameObject.tag.Equals(""))
+        // Debug.Log("IN RANGE OF COVID");
+        // Collision == infected
+        float odds = getOdds();            
+        if(caughtCovid(odds)){
+            hasCovid = true;
+            Debug.Log("CAUGHT COVID FROM ENEMY odds: " + odds);
+        }
 
     }
 

@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject heart1, heart2, heart3;
     public int playerHealth = 3;
     int playerLayer, enemyLayer; // temporary collision removal
-    bool coroutineAllowed = true;
+    public bool coroutineAllowed = true;
     Color color;
     Renderer renderer;
 
