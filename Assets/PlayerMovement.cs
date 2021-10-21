@@ -27,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
 
     public List<TargetIndicator> indicators = new List<TargetIndicator>();
 
+
+
     void Start()
     {
         gameOverText.SetActive(false);
@@ -67,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
         GameObject i = Instantiate(indicatorPrefab, transform) as GameObject;
         TargetIndicator t = i.GetComponent<TargetIndicator>();
         t.setTarget(s);
-        // i.transform.position = new Vector3(0,0,0);
         i.transform.parent = transform;
         indicators.Add(t);
     }
@@ -81,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
+    
     // Called 50 times per second
     void FixedUpdate()
     {
@@ -95,12 +96,17 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D col){
+        // if(col.gameObject.tag.Equals("Enemy") || col.gameObject.tag.Equals("Infected")){
         if(col.gameObject.tag.Equals("Enemy")){
             col.gameObject.transform.Rotate(0,0,0);
-
             getHurt();
-            
         }
+        // else if(col.gameObject.tag.Equals("Wall")){
+        //     //
+        // }
+        // else if(col.gameObject.tag.Equals("")){
+        //     //
+        // }
     }
 
     public void getHurt(){
@@ -125,17 +131,29 @@ public class PlayerMovement : MonoBehaviour
             restartButton.SetActive(true);
             gameObject.SetActive(false);
         }else{
-            MainScoreScript.score -= 10;
+            MainScoreScript.score -= 7;
+        }
+    }
+
+    public void Heal(){
+        if(playerHealth >= 3)
+            return;
+
+        playerHealth++;
+
+        switch(playerHealth){
+            case 3:
+                heart3.gameObject.SetActive(true);
+                break;
+            case 2:
+                heart2.gameObject.SetActive(true);
+                break;
         }
     }
 
     void OnTriggerStay2D(Collider2D col){ // Slime cleaning
-        if(col.gameObject.tag.Equals("Slime")){
-            // if(Input.GetKeyDown(KeyCode.Space))
-            MainScoreScript.score += 2;
-            LevelTextScript.slimeKills++;
-            slimeSpawner.RemoveSlime(col.gameObject);
-            Destroy(col.gameObject);
+        if(col.gameObject.tag.Equals("Infected") && Input.GetKeyDown(KeyCode.Space)){
+            Debug.Log("Giving Mask to Infected");
         }
     }
 

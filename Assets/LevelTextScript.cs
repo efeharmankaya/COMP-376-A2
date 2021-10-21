@@ -23,6 +23,7 @@ public class LevelTextScript : MonoBehaviour
         if(slimeKills >= (level  * 5 )){ // 5 * #level to increase level
             slimeKills = 0;
             level++;
+            GameObject.Find("Player").gameObject.GetComponent<PlayerMovement>().Heal();
         }
     }
 }

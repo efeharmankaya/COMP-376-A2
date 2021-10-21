@@ -39,6 +39,17 @@ public class SlimeScript : MonoBehaviour
             frameCount = 0;
     }
 
+    void OnTriggerStay2D(Collider2D col){ // Slime cleaning
+        if(col.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, col.transform.position) < 1f){
+            // if(Input.GetKeyDown(KeyCode.Space))
+            Debug.Log("PLAYER KILLED SLIME");
+            MainScoreScript.score += 2;
+            LevelTextScript.slimeKills++;
+            GameObject.Find("SlimeCreator").GetComponent<SlimeCreatorScript>().RemoveSlime(this.gameObject);
+            Destroy(this.gameObject);
+        }
+    }
+
     public void setDeathTime(int deathTime){
         maxTime = deathTime;
     }

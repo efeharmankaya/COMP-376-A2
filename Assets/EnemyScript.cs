@@ -24,7 +24,7 @@ public class EnemyScript : MonoBehaviour
     private GameObject mask, vax, radiation, skull;
     private SpriteRenderer maskRenderer, vaxRenderer;
     public Sprite maskSprite, nomaskSprite, vaxSprite, novaxSprite;
-
+    public CircleCollider2D circleCollider2D;
     bool coroutineAllowed = true;
     Vector2 movement;
     // public Animator animator;
@@ -39,6 +39,8 @@ public class EnemyScript : MonoBehaviour
         maskRenderer = mask.GetComponent<SpriteRenderer>();
         vaxRenderer = vax.GetComponent<SpriteRenderer>();
 
+        moveSpeed = hasCovid || isOld ? (moveSpeed/2) : (moveSpeed);
+
         changeDirection();
     }
 
@@ -49,16 +51,22 @@ public class EnemyScript : MonoBehaviour
     }
 
     void UpdateSprites(){
-        maskRenderer.sprite = this.hasMask ? maskSprite : nomaskSprite;
+        maskRenderer.sprite = hasMask ? maskSprite : nomaskSprite;
         vaxRenderer.sprite = hasVax ? vaxSprite : novaxSprite;
-        // if(hasVax){
-        //     vaxRenderer.sprite = vaxSprite;
-        // }else{
-            // vaxRenderer.sprite = novaxSprite;
-        // }
 
         radiation.gameObject.SetActive(hasCovid);
         skull.gameObject.SetActive(isOld);
+
+        string tempTag;
+        if(hasCovid)
+            tempTag = "Infected";
+        else if(isOld)
+            tempTag = "Old";
+        else if(hasVax)
+            tempTag = "Vax";
+        else
+            tempTag = "Unvax";
+        transform.gameObject.tag = tempTag;
     }
 
     void FixedUpdate()
@@ -79,17 +87,58 @@ public class EnemyScript : MonoBehaviour
         // animator.SetFloat("Speed", movement.sqrMagnitude);
     }
 
-    void OnCollisionEnter2D(Collision2D col){
-        // if(col.gameObject.tag.Equals("Wall") || col.gameObject.tag.Equals("Enemy")){
-        if(!col.gameObject.tag.Equals("Player"))
+    void OnCollisionEnter2D(Collision2D col){ // pathing + infecting other enemies
+        if(!col.gameObject.tag.Equals("Player")){
             changeDirection();
+            checkVirus(col);
+        }
+    }
+    void OnCollisionStay2D(Collision2D col){ // pathing + infecting other enemies
+        if(!col.gameObject.tag.Equals("Player")){
+            changeDirection();
+            checkVirus(col);
+        }
     }
 
-    void OnCollisionStay2D(Collision2D col){
-        // if(col.gameObject.tag.Equals("Wall") || col.gameObject.tag.Equals("Enemy")){
-        if(!col.gameObject.tag.Equals("Player"))
-            changeDirection();
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, other.transform.position) <= 3f)
+            checkPlayerVirus(other);
+        else if(other.gameObject.tag.Equals("Slime"))
+            checkSlimeVirus(other);
     }
+
+    void checkPlayerVirus(Collider2D col){
+        if(hasCovid){
+            PlayerMovement playerMovement = col.gameObject.GetComponent<PlayerMovement>();
+            playerMovement.getHurt();
+        }
+    }
+    void checkSlimeVirus(Collider2D col){
+        if(hasCovid)
+            return;
+        
+        float odds = 0.05f;
+
+        if(!hasVax)
+            odds += 0.1f;
+        if(!hasMask)
+            odds += 0.2f;
+        Debug.Log("in checkSlimeVirus odds: " + odds);
+        if(Random.Range(0f,1f) <= odds){
+            hasCovid = true;
+            Debug.Log("CAUGHT COVID FROM SLIME");
+        }
+    }
+    void checkVirus(Collision2D col){
+        if(hasVax && hasMask) // mask + vax = fully protected
+            return;
+        
+        // if(col.gameObject.tag.Equals(""))
+
+    }
+
+
 
     IEnumerator Wait(){
         coroutineAllowed = false;
