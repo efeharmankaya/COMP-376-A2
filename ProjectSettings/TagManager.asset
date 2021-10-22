@@ -7,10 +7,11 @@ TagManager:
   - Enemy
   - Wall
   - Slime
-  - Vax
-  - Unvax
-  - Old
   - Infected
+  - MaskBullet
+  - VaxBullet
+  - QuarantineBullet
+  - Heart
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - Enemy
   - Water
   - UI
-  - 
-  - 
+  - Bullet
+  - Player
   - 
   - 
   - 

@@ -66,12 +66,14 @@ public class EnemyScript : MonoBehaviour
         string tempTag;
         if(hasCovid)
             tempTag = "Infected";
-        else if(isOld)
-            tempTag = "Old";
-        else if(hasVax)
-            tempTag = "Vax";
         else
-            tempTag = "Unvax";
+            tempTag = "Enemy";
+        // else if(isOld)
+        //     tempTag = "Old";
+        // else if(hasVax)
+        //     tempTag = "Vax";
+        // else
+        //     tempTag = "Unvax";
         transform.gameObject.tag = tempTag;
     }
 
@@ -115,13 +117,19 @@ public class EnemyScript : MonoBehaviour
     }
     void OnCollisionStay2D(Collision2D col){ // pathing + infecting other enemies
         if(!col.gameObject.tag.Equals("Player")){
-            // checkVirus(col);
             changeDirection();
         }
     }
 
 
     void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, other.transform.position) <= 3f && hasCovid)
+            checkPlayerVirus(other);
+        else if(other.gameObject.tag.Equals("Slime"))
+            checkSlimeVirus(other);
+    }
+
+    void OnTriggerStay2D(Collider2D other) {
         if(other.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, other.transform.position) <= 3f && hasCovid)
             checkPlayerVirus(other);
         else if(other.gameObject.tag.Equals("Slime"))

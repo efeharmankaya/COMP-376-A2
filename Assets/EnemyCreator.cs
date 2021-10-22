@@ -80,7 +80,9 @@ public class EnemyCreator : MonoBehaviour
             es.hasMask = mask;
             es.isOld = old;
             es.hasCovid = covid;
-            enemy.tag = covid ? "Infected" : tag; // Double check correct tag for infected
+
+            // Changed: removed other descriptive tags, only Infected / Enemy now
+            enemy.tag = covid ? "Infected" : "Enemy"; // Double check correct tag for infected
             enemies.Add(enemy);
         }
         

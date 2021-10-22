@@ -135,10 +135,11 @@ GameObject:
   - component: {fileID: 50951917}
   - component: {fileID: 50951916}
   - component: {fileID: 50951915}
+  - component: {fileID: 50951922}
   - component: {fileID: 50951919}
   - component: {fileID: 50951920}
   - component: {fileID: 50951921}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -161,6 +162,7 @@ MonoBehaviour:
   slimeSpawner: {fileID: 224768933}
   indicatorPrefab: {fileID: 184492183072534595, guid: 648e1592c3132df479f0d4fec8b0814f, type: 3}
   rb: {fileID: 50951916}
+  cam: {fileID: 62345314}
   animator: {fileID: 50951919}
   gameOverText: {fileID: 460539018}
   restartButton: {fileID: 1167599539}
@@ -250,12 +252,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 50951914}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -123, y: 33, z: 0}
+  m_LocalPosition: {x: -123.03, y: 30.05, z: 0}
   m_LocalScale: {x: 1.7989, y: 1.7989, z: 1.7989}
   m_Children:
   - {fileID: 1276625283}
   - {fileID: 554960917}
   - {fileID: 1043293658}
+  - {fileID: 1713184162}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -320,6 +323,23 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 4.5
+--- !u!114 &50951922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50951914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afb8380847cbb9044b4f363bb37fef39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 1713184162}
+  baseBullet: {fileID: 2463559248995513191, guid: 52412e104fd6f1947b4a14a9c305ef8a, type: 3}
+  vaxSprite: {fileID: 21300000, guid: 8cca5a78d5d3ac64f911cad58120fcc7, type: 3}
+  quarantineSprite: {fileID: 21300000, guid: d0a17f46b0c03ef4790c87c8b65ca036, type: 3}
+  force: 20
 --- !u!1 &62345312
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,7 +447,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 972644644798926414, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: hasCovid
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 972644644798926414, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: moveSpeed
@@ -437,17 +457,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseEnemyFinal (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6117697174414839000, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 7034686708561314330, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7034686708561314330, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -124.81
+      value: -126.33
       objectReference: {fileID: 0}
     - target: {fileID: 7034686708561314330, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.49
+      value: 22.24
       objectReference: {fileID: 0}
     - target: {fileID: 7034686708561314330, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1179,9 +1203,9 @@ GameObject:
   m_Component:
   - component: {fileID: 554960917}
   - component: {fileID: 554960918}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: heart2
-  m_TagString: Untagged
+  m_TagString: Heart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1330,6 +1354,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseEnemyFinal
       objectReference: {fileID: 0}
+    - target: {fileID: 6117697174414839000, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 7034686708561314330, guid: 46a6ce2f47d6388499de0844ed2a460f, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1422,7 +1450,7 @@ GameObject:
   - component: {fileID: 753123805}
   m_Layer: 3
   m_Name: TreeEnemy2
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2095,9 +2123,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1043293658}
   - component: {fileID: 1043293659}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: heart3
-  m_TagString: Untagged
+  m_TagString: Heart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2794,7 +2822,7 @@ GameObject:
   - component: {fileID: 1272961942}
   m_Layer: 3
   m_Name: TreeEnemy
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2964,9 +2992,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1276625283}
   - component: {fileID: 1276625284}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: heart1
-  m_TagString: Untagged
+  m_TagString: Heart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3508,6 +3536,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1424261212}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1713184161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1713184162}
+  m_Layer: 7
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1713184162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713184161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 50951918}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1725699690
 GameObject:

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Collision + Text https://www.youtube.com/watch?v=JC59tDg4tmo
-
+// Shooting https://www.youtube.com/watch?v=LNLVOjbrQj4
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 8f;
@@ -11,8 +11,10 @@ public class PlayerMovement : MonoBehaviour
     public SlimeCreatorScript slimeSpawner;
     public GameObject indicatorPrefab;
     public Rigidbody2D rb;
+    public Camera cam;
     public Animator animator;
     Vector2 movement;
+    Vector2 mousePos;
 
     public GameObject gameOverText, restartButton;
     /*
@@ -52,18 +54,7 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Input
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
 
-        animator.SetFloat("Horizontal", movement.x);
-        animator.SetFloat("Vertical", movement.y);
-        animator.SetFloat("Speed", movement.sqrMagnitude);
-           
-    }
 
     public void addIndicator(GameObject s){
         GameObject i = Instantiate(indicatorPrefab, transform) as GameObject;
@@ -82,6 +73,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        // Input
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
+
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
+
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+           
+    }
     
     // Called 50 times per second
     void FixedUpdate()
@@ -89,25 +94,33 @@ public class PlayerMovement : MonoBehaviour
         // Movement
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
 
+        
+        Vector2 lookDir = mousePos - rb.position;
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        // GameObject.Find("FirePoint").gameObject.GetComponent<Rigidbody2D>().rotation = angle;
+        GameObject.Find("FirePoint").gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
+
+        // rb.rotation = angle;
+
         if(MainScoreScript.score <= -20){
             playerHealth = 0;
             getHurt();
         }
     }
 
-    void OnCollisionEnter2D(Collision2D col){
-        // if(col.gameObject.tag.Equals("Enemy") || col.gameObject.tag.Equals("Infected")){
-        if(col.gameObject.tag.Equals("Enemy")){
-            col.gameObject.transform.Rotate(0,0,0);
-            getHurt();
-        }
-        // else if(col.gameObject.tag.Equals("Wall")){
-        //     //
-        // }
-        // else if(col.gameObject.tag.Equals("")){
-        //     //
-        // }
-    }
+    // void OnCollisionEnter2D(Collision2D col){
+    //     // if(col.gameObject.tag.Equals("Enemy") || col.gameObject.tag.Equals("Infected")){
+    //     if(col.gameObject.tag.Equals("Infected")){
+    //         col.gameObject.transform.Rotate(0,0,0);
+    //         getHurt();
+    //     }
+    //     // else if(col.gameObject.tag.Equals("Wall")){
+    //     //     //
+    //     // }
+    //     // else if(col.gameObject.tag.Equals("")){
+    //     //     //
+    //     // }
+    // }
 
     public void getHurt(){
         playerHealth -= 1;
@@ -151,11 +164,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D col){ // Slime cleaning
-        if(col.gameObject.tag.Equals("Infected") && Input.GetKeyDown(KeyCode.Space)){
-            Debug.Log("Giving Mask to Infected");
-        }
-    }
+    // void OnTriggerStay2D(Collider2D col){ // Slime cleaning
+    //     if(col.gameObject.tag.Equals("Infected") && Input.GetKeyDown(KeyCode.Space)){
+    //         Debug.Log("Giving Mask to Infected");
+    //     }
+    // }
 
     IEnumerator Immortal()
     {
