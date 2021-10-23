@@ -21,6 +21,7 @@ public class EnemyScript : MonoBehaviour
     public bool hasVax;
     public bool isOld;
 
+    public float playerCovidOdds;
     public static float maxCooldown = 5f;
     public float cooldown;
     private bool startCoolDown = false;
@@ -160,7 +161,7 @@ public class EnemyScript : MonoBehaviour
                 return; // skip if player is already immortal
             float odds = Random.Range(0f,1f);
             Debug.Log("PLAYER IN RANGE OF COVID odds: " + odds);
-            if(odds <= 0.2f){
+            if(odds <= playerCovidOdds){
                 playerMovement.getHurt();
             }else{ // random covid chance to player didn't spread
                 playerMovement.StartCoroutine("Immortal");

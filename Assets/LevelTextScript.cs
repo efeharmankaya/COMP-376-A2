@@ -23,9 +23,20 @@ public class LevelTextScript : MonoBehaviour
         if(slimeKills >= (level  * 5 )){ // 5 * #level to increase level
             slimeKills = 0;
             level++;
-            GameObject.Find("Player").gameObject.GetComponent<PlayerMovement>().Heal();
+            
+
+            GameObject player = GameObject.Find("Player").gameObject;
+            player.GetComponent<PlayerMovement>().Heal(); // heal player one heart per level increase
+            player.GetComponent<Shooting>().shootSpeedCooldown += 0.25f; // increase shooting cooldown by 0.25seconds per level increase
+
             EnemyCreator em = GameObject.Find("EnemyCreator").gameObject.GetComponent<EnemyCreator>();
+            em.enemyMoveSpeedIncrement += 1f; // Increase move speed of new spawned enemies by 1f
+            em.increaseSpawns();
+            em.baseCovidOdds += 0.1f;
+
             em.startLevelSpawning(); // Destroy all current enemies and start new spawning
+        
+
         }
     }
 }

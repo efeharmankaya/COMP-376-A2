@@ -26,6 +26,8 @@ public class EnemyCreator : MonoBehaviour
 
     public Transform[] spawns;
 
+    public float enemyMoveSpeedIncrement = 0f;
+
     // Spawning params
     public int[] spawnNumbers = {
         2, // Vax
@@ -34,6 +36,16 @@ public class EnemyCreator : MonoBehaviour
         1, // Old (high risk)
         0, // Infected
     };
+
+    public int[] levelMobSpawn = {
+        0, // Vax
+        1, // Unvax mask
+        1, // Unvax no mask
+        0, // Old (high risk)
+        1, // Infected
+    };
+
+    public float baseCovidOdds = 0.2f;
 
     public List<GameObject> enemies = new List<GameObject>();
 
@@ -71,6 +83,20 @@ public class EnemyCreator : MonoBehaviour
         }
     }
 
+    public void spawnMob(){
+
+    }
+
+    public void increaseSpawns(){
+        int level = LevelTextScript.level;
+        for(int i = 0; i < spawnNumbers.Length; i++){ 
+            spawnNumbers[i]++; 
+            if(i == 1 || i == 2 || i == 4){ // Selected mob values for (unvax mask / unvax no mask / infected)
+                levelMobSpawn[i]++;
+            }
+        }
+    }
+
     private void createEnemy(int n, string tag, bool vax, bool mask, bool old, bool covid){
         for(int i = 0; i < n; i++){
             GameObject enemy = Instantiate(EnemyBase, spawns[Random.Range(0, spawns.Length)]);
@@ -80,7 +106,9 @@ public class EnemyCreator : MonoBehaviour
             es.hasMask = mask;
             es.isOld = old;
             es.hasCovid = covid;
-
+            
+            es.moveSpeed += enemyMoveSpeedIncrement;
+            es.playerCovidOdds = baseCovidOdds;
             // Changed: removed other descriptive tags, only Infected / Enemy now
             enemy.tag = covid ? "Infected" : "Enemy"; // Double check correct tag for infected
             enemies.Add(enemy);

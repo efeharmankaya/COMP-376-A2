@@ -6,11 +6,13 @@ public class BulletScript : MonoBehaviour
 {
     // public string bulletType;
     
-    public int playerLayer, bulletLayer;
+    public int playerLayer, bulletLayer, batteringRamLayer;
     void Start() {
         playerLayer = LayerMask.NameToLayer("Player");
+        batteringRamLayer = LayerMask.NameToLayer("BatteringRam");
         bulletLayer = this.gameObject.layer;
         Physics2D.IgnoreLayerCollision(playerLayer, bulletLayer, true);
+        Physics2D.IgnoreLayerCollision(batteringRamLayer, bulletLayer, true);
     }
     void OnCollisionEnter2D(Collision2D other) {
         if(other.gameObject.tag.Equals("Wall"))
@@ -47,67 +49,14 @@ public class BulletScript : MonoBehaviour
                 es.hasMask = true;
                 break;
         }
-        if(delete)
+        if(delete){
             Destroy(gameObject);
-        else
-            StartCoroutine(WaitForDelete());
+            MainScoreScript.score++; // increase score on sucessful bullet shot 
+        }
+        else{
+            StartCoroutine(WaitForDelete()); // start wait for deletion on ground if bullet not used
+        }
     }
-
-    // void OnTriggerEnter2D(Collider2D other) {
-    //     if(other.gameObject.tag.Equals("Wall"))
-    //         Destroy(gameObject);
-    //     if(other.gameObject.tag.Equals("Enemy")/* && Vector2.Distance(other.transform.position, transform.position) <= 1f */){
-            // gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            // // Check enemy params
-            // GameObject enemy = other.gameObject;
-            // EnemyScript es = enemy.GetComponent<EnemyScript>();
-            // // Debug.Log("BULLET IN ENEMY RANGE");
-            // switch(bulletType){
-            //     case "QuarantineBullet":
-            //         // TODO: move enemy out of map w/ touches spawning slime
-            //         if(!es.hasCovid) // Skip if enemy doesn't have covid
-            //             break;
-            //         break;
-            //     case "VaxBullet":
-            //         es.hasVax = true; // set to true regardless of previous state
-            //         break;
-            //     case "MaskBullet":
-            //         es.hasMask = true;
-            //         break;
-            // }
-    //     }
-    // }
-
-    // void OnTriggerStay2D(Collider2D other) {
-    //     if(other.gameObject.tag.Equals("Enemy") && Vector2.Distance(other.transform.position, transform.position) <= 1f){
-    //         gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-    //         // Check enemy params
-    //         GameObject enemy = other.gameObject;
-    //         EnemyScript es = enemy.GetComponent<EnemyScript>();
-    //         // Debug.Log("BULLET IN ENEMY RANGE");
-    //         switch(bulletType){
-    //             case "QuarantineBullet":
-    //                 // TODO: move enemy out of map w/ touches spawning slime
-    //                 if(!es.hasCovid) // Skip if enemy doesn't have covid
-    //                     break;
-    //                 break;
-    //             case "VaxBullet":
-    //                 es.hasVax = true; // set to true regardless of previous state
-    //                 break;
-    //             case "MaskBullet":
-    //                 es.hasMask = true;
-    //                 break;
-    //         }
-    //     }
-    // }
-
-    // void OnTriggerExit2D(Collider2D other) {
-    //     if(other.gameObject.tag.Equals("Player") && Vector2.Distance(transform.position, GameObject.Find("Player").transform.position) >= 3f) {
-    //         gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-    //         StartCoroutine(WaitForDelete());
-    //     }
-    // }
-
 
     IEnumerator WaitForDelete(){
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;

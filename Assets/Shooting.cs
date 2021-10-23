@@ -6,10 +6,15 @@ public class Shooting : MonoBehaviour
 {
     public Transform firePoint;
     public GameObject baseBullet;
-    // public GameObject vaxPrefab;
-    // public GameObject quarantinePrefab;
+    public GameObject baseBatteringRam;
+
     public Sprite vaxSprite, quarantineSprite;
     public float force = 20f;
+    public bool coroutineAllowed = true;
+    public float shootSpeedCooldown = 0.5f;
+    public float batteringRamCooldown = 20f;
+
+    public bool batteringRamAllowed = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,13 +24,22 @@ public class Shooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-            Shoot("QuarantineBullet");
-        else if(Input.GetKeyDown(KeyCode.Q))
-            Shoot("VaxBullet");  
-        else if(Input.GetKeyDown(KeyCode.E))
-            Shoot("MaskBullet");
+        if(Input.GetKeyDown(KeyCode.Space) && batteringRamAllowed)
+                CreateBatteringRam();
 
+        if(coroutineAllowed){
+            if(Input.GetButtonDown("Fire1"))
+                Shoot("QuarantineBullet");
+            else if(Input.GetKeyDown(KeyCode.E))
+                Shoot("VaxBullet");  
+            else if(Input.GetKeyDown(KeyCode.Q))
+                Shoot("MaskBullet");
+            else
+                return;
+
+            StartCoroutine(ShootCooldown());
+            
+        }
     }
 
     void Shoot(string bulletType){
@@ -48,5 +62,24 @@ public class Shooting : MonoBehaviour
         rb.AddForce(firePoint.up * force, ForceMode2D.Impulse);
         // bullet.transform.parent = firePoint.transform;
         bullet.transform.tag = bulletType;
+    }
+
+    void CreateBatteringRam(){
+        GameObject batteringRam = Instantiate(baseBatteringRam, firePoint);
+        batteringRam.transform.parent = firePoint.transform;
+        StartCoroutine(BatteringRamCooldown());
+    }
+
+    IEnumerator ShootCooldown()
+    {
+        coroutineAllowed = false; // mutex lock
+        yield return new WaitForSeconds(shootSpeedCooldown);
+        coroutineAllowed = true; // mutex unlock
+    }
+
+    IEnumerator BatteringRamCooldown(){
+        batteringRamAllowed = false;
+        yield return new WaitForSeconds(batteringRamCooldown);
+        batteringRamAllowed = true;
     }
 }
