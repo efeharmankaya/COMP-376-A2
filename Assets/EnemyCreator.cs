@@ -30,19 +30,19 @@ public class EnemyCreator : MonoBehaviour
 
     // Spawning params
     public int[] spawnNumbers = {
-        2, // Vax
+        1, // Vax
         1, // Unvax mask
-        2, // Unvax no mask
+        0, // Unvax no mask
         1, // Old (high risk)
         0, // Infected
     };
 
     public int[] levelMobSpawn = {
-        0, // Vax
-        1, // Unvax mask
-        1, // Unvax no mask
+        1, // Vax
+        0, // Unvax mask
+        0, // Unvax no mask
         0, // Old (high risk)
-        1, // Infected
+        2, // Infected
     };
 
     public float baseCovidOdds = 0.2f;
@@ -55,7 +55,6 @@ public class EnemyCreator : MonoBehaviour
         startLevelSpawning();
     }
 
-    // TODO???: make static to be called from other script????
     public void startLevelSpawning(){
         Debug.Log("NEW LEVEL SPAWNING #" + LevelTextScript.level);
         foreach(GameObject e in enemies){ Destroy(e); }
@@ -84,22 +83,50 @@ public class EnemyCreator : MonoBehaviour
     }
 
     public void spawnMob(){
-
+        Transform mobSpawn = spawns[Random.Range(0, spawns.Length)];
+        for(int i = 0; i < levelMobSpawn.Length; i++){
+            int n = levelMobSpawn[i]; // amount of current index enemy to spawn
+            switch(i){
+                case 0: // vax enemy
+                    createEnemy(n, "Vax", true, true, false, false, mobSpawn);
+                    break;
+                case 1: // unvax masked enemy
+                    createEnemy(n, "Unvax", false, true, false, false, mobSpawn);
+                    break;
+                case 2: // unvax no mask enemy
+                    createEnemy(n, "Unvax", false, false, false, false, mobSpawn);
+                    break;
+                case 3: // old enemy
+                    createEnemy(n, "Old", false, true, true, false, mobSpawn);
+                    break;
+                case 4: // infected enemy
+                    createEnemy(n, "Infected", false, false, false, true, mobSpawn);
+                    break;
+            }
+        }
     }
 
     public void increaseSpawns(){
         int level = LevelTextScript.level;
         for(int i = 0; i < spawnNumbers.Length; i++){ 
             spawnNumbers[i]++; 
-            if(i == 1 || i == 2 || i == 4){ // Selected mob values for (unvax mask / unvax no mask / infected)
+            if(i == 2 || i == 4){ // Selected mob values for (unvax no mask / infected)
                 levelMobSpawn[i]++;
             }
         }
     }
 
-    private void createEnemy(int n, string tag, bool vax, bool mask, bool old, bool covid){
+    private void createEnemy(int n, string tag, bool vax, bool mask, bool old, bool covid, Transform spawnpoint = null){
         for(int i = 0; i < n; i++){
-            GameObject enemy = Instantiate(EnemyBase, spawns[Random.Range(0, spawns.Length)]);
+            Debug.Log("Spawning : " + tag + " : n = " + n);
+            if(!spawnpoint)
+               spawnpoint = spawns[Random.Range(0, spawns.Length)];
+
+            GameObject enemy = Instantiate(
+                EnemyBase, 
+                spawnpoint
+            );
+
             EnemyScript es = enemy.GetComponent<EnemyScript>();
             enemy.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, 0);
             es.hasVax = vax;
@@ -119,6 +146,7 @@ public class EnemyCreator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // if(Input.GetKeyDown(KeyCode.Space))
+        //     spawnMob();
     }
 }

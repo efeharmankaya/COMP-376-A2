@@ -14,7 +14,7 @@ External images/sprites used:
 public class EnemyScript : MonoBehaviour
 {
     public Rigidbody2D rb;
-    
+    public Animator animator;
     public float moveSpeed = 5f;
     public bool hasCovid;
     public bool hasMask;
@@ -31,6 +31,7 @@ public class EnemyScript : MonoBehaviour
     public Sprite maskSprite, nomaskSprite, vaxSprite, novaxSprite;
     public CircleCollider2D circleCollider2D;
     bool coroutineAllowed = true;
+    bool covidAllowed = true;
     Vector2 movement;
     // public Animator animator;
     // Start is called before the first frame update
@@ -55,6 +56,9 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         UpdateSprites();
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
     }
 
     void UpdateSprites(){
@@ -69,12 +73,7 @@ public class EnemyScript : MonoBehaviour
             tempTag = "Infected";
         else
             tempTag = "Enemy";
-        // else if(isOld)
-        //     tempTag = "Old";
-        // else if(hasVax)
-        //     tempTag = "Vax";
-        // else
-        //     tempTag = "Unvax";
+
         transform.gameObject.tag = tempTag;
     }
 
@@ -173,27 +172,26 @@ public class EnemyScript : MonoBehaviour
         if(hasCovid)
             return;
         
-        float odds = getOdds();
-
-        // Debug.Log("in checkSlimeVirus odds: " + odds);
-        if(caughtCovid(odds)){
-            hasCovid = true;
-            Debug.Log("ENEMY CAUGHT COVID FROM SLIME odds: " + odds);
-        }
+        if(covidAllowed)
+            tryGetCovid();
     }
 
     void checkVirus(Collision2D col){
         if(hasCovid || col.gameObject.tag != "Infected") // skip logic if this has covid or collision isn't infected
             return;
         
-        // Debug.Log("IN RANGE OF COVID");
-        // Collision == infected
-        float odds = getOdds();            
+        if(covidAllowed)
+            tryGetCovid();
+    }
+
+    void tryGetCovid(){
+        float odds = getOdds();
         if(caughtCovid(odds)){
             hasCovid = true;
-            Debug.Log("CAUGHT COVID FROM ENEMY odds: " + odds);
+            Debug.Log("CAUGHT COVID odds: " + odds);
+        }else{
+            StartCoroutine(TouchedCovid());
         }
-
     }
 
 
@@ -206,5 +204,11 @@ public class EnemyScript : MonoBehaviour
         movement.x = Random.Range(-1f,1f);
         movement.y = Random.Range(-1f,1f);
         coroutineAllowed = true;
+    }
+
+    IEnumerator TouchedCovid(){
+        covidAllowed = false;
+        yield return new WaitForSeconds(3f);
+        covidAllowed = true;
     }
 }

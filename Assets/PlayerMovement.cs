@@ -6,8 +6,8 @@ using UnityEngine;
 // Shooting https://www.youtube.com/watch?v=LNLVOjbrQj4
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 8f;
-
+    public float moveSpeed = 5f;
+    public float slowSpeed = 0.3f;
     public SlimeCreatorScript slimeSpawner;
     public GameObject indicatorPrefab;
     public Rigidbody2D rb;
@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
     Vector2 mousePos;
 
+    public TimeManager timemanager;
     public GameObject gameOverText, restartButton;
     /*
         Controlling lives
@@ -28,8 +29,6 @@ public class PlayerMovement : MonoBehaviour
     Renderer renderer;
 
     public List<TargetIndicator> indicators = new List<TargetIndicator>();
-
-
 
     void Start()
     {
@@ -85,7 +84,13 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Speed", movement.sqrMagnitude);
 
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-           
+
+        if(Input.GetKey(KeyCode.LeftShift)){
+            timemanager.SlowMotion();
+            moveSpeed = 3f * (1/Time.timeScale);
+        }else{
+            moveSpeed = 5f;
+        }    
     }
     
     // Called 50 times per second
@@ -107,20 +112,6 @@ public class PlayerMovement : MonoBehaviour
             getHurt();
         }
     }
-
-    // void OnCollisionEnter2D(Collision2D col){
-    //     // if(col.gameObject.tag.Equals("Enemy") || col.gameObject.tag.Equals("Infected")){
-    //     if(col.gameObject.tag.Equals("Infected")){
-    //         col.gameObject.transform.Rotate(0,0,0);
-    //         getHurt();
-    //     }
-    //     // else if(col.gameObject.tag.Equals("Wall")){
-    //     //     //
-    //     // }
-    //     // else if(col.gameObject.tag.Equals("")){
-    //     //     //
-    //     // }
-    // }
 
     public void getHurt(){
         playerHealth -= 1;
@@ -163,12 +154,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
     }
-
-    // void OnTriggerStay2D(Collider2D col){ // Slime cleaning
-    //     if(col.gameObject.tag.Equals("Infected") && Input.GetKeyDown(KeyCode.Space)){
-    //         Debug.Log("Giving Mask to Infected");
-    //     }
-    // }
 
     IEnumerator Immortal()
     {
