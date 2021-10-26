@@ -21,7 +21,7 @@ public class EnemyScript : MonoBehaviour
     public bool hasVax;
     public bool isOld;
 
-    public float playerCovidOdds;
+    public float playerCovidOdds = 0.2f;
     public static float maxCooldown = 5f;
     public float cooldown;
     private bool startCoolDown = false;
@@ -32,6 +32,7 @@ public class EnemyScript : MonoBehaviour
     public CircleCollider2D circleCollider2D;
     bool coroutineAllowed = true;
     bool covidAllowed = true;
+    public bool headingIsolation = false;
     Vector2 movement;
     // public Animator animator;
     // Start is called before the first frame update
@@ -98,18 +99,14 @@ public class EnemyScript : MonoBehaviour
     }
 
     public void changeDirection(){
-        // if(coroutineAllowed)
-            StartCoroutine(Wait());
-        // StartCoroutine(Wait());
-        // movement.x = Random.Range(-1,1);
-        // movement.y = Random.Range(-1,1);
-        
-        // animator.SetFloat("Horizontal", movement.x);
-        // animator.SetFloat("Vertical", movement.y);
-        // animator.SetFloat("Speed", movement.sqrMagnitude);
+        StartCoroutine(Wait());
     }
 
     void OnCollisionEnter2D(Collision2D col){ // pathing + infecting other enemies
+        if(col.gameObject.tag.Equals("Wall") && headingIsolation){
+            GameObject.Find("EnemyCreator").GetComponent<EnemyCreator>().enemies.Remove(this.gameObject);
+            Destroy(this.gameObject);
+        }
         if(!col.gameObject.tag.Equals("Player")){
             checkVirus(col);
             changeDirection();

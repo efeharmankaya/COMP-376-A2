@@ -36,6 +36,7 @@ public class BulletScript : MonoBehaviour
                 
                 // TEMP
                 es.hasCovid = false;
+                es.headingIsolation = true;
                 delete = true;
                 break;
             case "VaxBullet":

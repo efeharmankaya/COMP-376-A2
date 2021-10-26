@@ -19,6 +19,7 @@ public class RestartButtonScript : MonoBehaviour
 
     public void RestartScene()
     {
+        Time.timeScale = 1f;
         // Reset all static variables
         MainScoreScript.score = 0;
         LevelTextScript.level = 1;

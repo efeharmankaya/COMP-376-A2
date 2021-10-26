@@ -133,6 +133,7 @@ public class PlayerMovement : MonoBehaviour
         if(playerHealth < 1){
             gameOverText.SetActive(true);
             restartButton.SetActive(true);
+            Time.timeScale = 0f;
             gameObject.SetActive(false);
         }else{
             MainScoreScript.score -= 7;
