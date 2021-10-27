@@ -94,8 +94,6 @@ public class EnemyScript : MonoBehaviour
             else
                 framecount = 0;
         }
-        
-        
     }
 
     public void changeDirection(){

@@ -35,9 +35,10 @@ public class LevelTextScript : MonoBehaviour
             em.enemyMoveSpeedIncrement += 1f; // Increase move speed of new spawned enemies by 1f
             em.increaseSpawns();
             em.baseCovidOdds += 0.1f;
-            
+
             em.startLevelSpawning(); // Destroy all current enemies and start new spawning
             // StartCoroutine(StartMobSpawning());
+            em.spawnMob();
 
         }
     }
